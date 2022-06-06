@@ -49,7 +49,7 @@ def start_cal():
             # NEED TO FIND OUT WHY THIS EXCEPT BLOCK IS NEEDED FOR THE Q CONDITIONAL IN THE TRY BLOCK TO WORK PROPERLY
 
     else:
-        
+
         print("Have a good day.")
 
 if __name__ == "__main__":
