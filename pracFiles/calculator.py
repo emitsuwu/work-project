@@ -1,6 +1,7 @@
 # this program is a basic 4 function calculator with integers
 import math
 
+
 def start_cal():
 
     x, y, answer = 0, 0, 0
@@ -8,7 +9,8 @@ def start_cal():
     yes_no = input("Do you want to do some math? Enter Y or N: ")
     while yes_no.lower() == "y":
         try:
-            choice = input("Choose between +, -, *, or / (you can also choose q to quit): ")
+            choice = input(
+                "Choose between +, -, *, or / (you can also choose q to quit): ")
             if choice == "+":
                 print("Enter 2 numbers to add.")
                 print("--------------------")
@@ -51,6 +53,7 @@ def start_cal():
     else:
 
         print("Have a good day.")
+
 
 if __name__ == "__main__":
     start_cal()
