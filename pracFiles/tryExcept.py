@@ -6,7 +6,7 @@ def start_game():
     choice = input("Do you want to play the game? Enter Y or N: ")
     while choice.lower() == "y":
         try:
-            y = input("Choose a number between 1 and 10: ") # y is our user input for guessing a number
+            y = input("Choose a number between 1 and 10, or enter q to quit: ") # y is our user input for guessing a number
             if int(y) < 1 or int(y) > 10:
                 raise ValueError("The number you chose is too big or too small.")
             if x == int(y):
@@ -24,9 +24,12 @@ def start_game():
             elif int(y) > x:
                 print("The number is too high.")
                 z += 1
-        except ValueError as err:
-            print("That is not a valid input.")
-            print("{}")
+        except ValueError as valErr:
+            if str(y) == "q":
+                print("Exiting the program now, have a nice day.")
+                break
+            else:
+                print("That is not a valid input.")
     else:
         print("Have a good day!")
 
