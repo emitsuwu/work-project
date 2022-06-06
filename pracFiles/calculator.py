@@ -2,6 +2,7 @@
 import math
 
 def start_cal():
+
     x, y, answer = 0, 0, 0
     print("Welcome to Emi's basic 4 function calculator.")
     yes_no = input("Do you want to do some math? Enter Y or N: ")
@@ -48,6 +49,7 @@ def start_cal():
             # NEED TO FIND OUT WHY THIS EXCEPT BLOCK IS NEEDED FOR THE Q CONDITIONAL IN THE TRY BLOCK TO WORK PROPERLY
 
     else:
+        
         print("Have a good day.")
 
 if __name__ == "__main__":
