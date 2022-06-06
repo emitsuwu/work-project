@@ -1,3 +1,4 @@
+# this program is a number guesser, with the number guessed being random every time
 import random
 
 def start_game():
@@ -7,8 +8,6 @@ def start_game():
     while choice.lower() == "y":
         try:
             y = input("Choose a number between 1 and 10, or enter q to quit: ") # y is our user input for guessing a number
-            if int(y) < 1 or int(y) > 10:
-                raise ValueError("The number you chose is too big or too small.")
             if x == int(y):
                 z += 1
                 print("You got the number! It took you " + str(z) + " attempt(s).")
@@ -24,6 +23,8 @@ def start_game():
             elif int(y) > x:
                 print("The number is too high.")
                 z += 1
+            elif int(y) < 1 or int(y) > 10:
+                print("The number is not within scope.")
         except ValueError as valErr:
             if str(y) == "q":
                 print("Exiting the program now, have a nice day.")
