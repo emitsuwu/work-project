@@ -25,6 +25,9 @@ print(d.shape)
 print(dd.shape)
 print(dd.dtype)
 
-#
+# Return a sample (or samples) from the “standard normal” distribution.
 print()
 print("-------------")
+print("Returning a sample from the 'standard normal' distribution: ")
+rn = np.random.randn(3, 3)
+print(rn)
