@@ -8,6 +8,9 @@ connection = sqlite3.connect('sqlTable.db')
 # create cursor object
 cursor = connection.cursor()
 
+# Drop the VENDOR table if already exists | makes life easier when running this file multiple times for debugging
+cursor.execute("DROP TABLE IF EXISTS VENDOR")
+
 # creating table VENDOR
 table = """ CREATE TABLE VENDOR (
             Name CHAR(255) NOT NULL,
@@ -29,6 +32,8 @@ connection.execute(
 
 # test to make sure that table is created and can display correctly
 data = cursor.execute("""SELECT * FROM VENDOR""")
+# print() is to make sure that there is a space between exec line and print line below
+print()
 print("Vendor table: ")
 for row in data:
     print(row)
