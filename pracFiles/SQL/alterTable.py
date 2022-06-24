@@ -1,4 +1,10 @@
 import sqlite3
+from pracFiles.tryExept import start_game
+# import pracFiles.tryExcept as jackson
+#
+#
+start_game()
+
 
 # Connecting to sqlite
 connection_obj = sqlite3.connect('alterTable.db')
