@@ -1,6 +1,7 @@
 # this is the file that will be used as an example for the CBA tool
 
 import sqlite3
+from pyQTFiles.cba2.py import setValues
 # import logic file here, so it can run and you can get local data to insert into table
 # look at G4G article on how to use other .py files' local variables
 

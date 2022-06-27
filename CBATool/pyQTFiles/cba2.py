@@ -73,9 +73,29 @@ class Ui_Dialog(object):
         self.submitPushButton = QtWidgets.QPushButton(Dialog)
         self.submitPushButton.setObjectName("submitPushButton")
         self.horizontalLayout_5.addWidget(self.submitPushButton)
+        self.submitPushButton.clicked.connect(self.setValues) # THIS CONNECTS TO THE setValues DEF
         self.verticalLayout.addLayout(self.horizontalLayout_5)
 
+    def setValues(self, Dialog):
         self.retranslateUi(Dialog)
+        # nValue = self.nameLineEdit.text()
+        # # nameLineEdit might not need to be error checked since it's a string and it can be named anything...?
+        try:
+            pValue = self.priceLineEdit.text()
+            float(pValue)
+            print("This is a true value and passes the float test.")
+        except ValueError:
+            print("Failed the float test.")
+            pValue = None
+
+        try:
+            aValue = self.amtLineEdit.text()
+            int(aValue)
+            print("This is a true value and passes the int test.")
+        except ValueError:
+            print("Failed the int test.")
+            aValue = None
+
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
@@ -86,13 +106,3 @@ class Ui_Dialog(object):
         self.priceLabel.setText(_translate("Dialog", "Price:"))
         self.amtLabel.setText(_translate("Dialog", "Amt:"))
         self.submitPushButton.setText(_translate("Dialog", "Submit"))
-
-
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
-    sys.exit(app.exec_())
