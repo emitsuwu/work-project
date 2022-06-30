@@ -9,7 +9,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+from sqlTable import insertData
+from sqlTable import checkData
 
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
@@ -78,6 +79,7 @@ class Ui_Dialog(object):
         self.retranslateUi(Dialog)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
+
     def setValues(self, Dialog):
         # nValue = self.nameLineEdit.text()
         # # nameLineEdit might not need to be error checked since it's a string and it can be named anything...?
@@ -96,6 +98,9 @@ class Ui_Dialog(object):
         except ValueError:
             print("Failed the int test.")
             aValue = None
+
+        insertData(pValue, aValue)
+        checkData()
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
