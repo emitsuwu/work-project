@@ -1,0 +1,6 @@
+make this a qwidget
+minor detail: title my box
+make id, name, price, and amt NOT NULL
+change my create table statement to work with company standard for futureproofing lol
+have a pop up box for when an input is put in that doesnt satisfy criteria
+  --> clear if correct
