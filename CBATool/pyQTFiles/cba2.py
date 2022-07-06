@@ -12,18 +12,18 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from sqlTable import insertData
 from sqlTable import checkData
 
-class Ui_Dialog(object):
-    def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
-        Dialog.resize(346, 227)
-        self.verticalLayout = QtWidgets.QVBoxLayout(Dialog)
+class Ui_Form(object):
+    def setupUi(self, Form):
+        Form.setObjectName("Form")
+        Form.resize(346, 227)
+        self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
         self.horizontalLayout.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.titleLabel = QtWidgets.QLabel(Dialog)
+        self.titleLabel = QtWidgets.QLabel(Form)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -36,10 +36,10 @@ class Ui_Dialog(object):
         self.verticalLayout.addLayout(self.horizontalLayout)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
-        self.nameLabel = QtWidgets.QLabel(Dialog)
+        self.nameLabel = QtWidgets.QLabel(Form)
         self.nameLabel.setObjectName("nameLabel")
         self.horizontalLayout_2.addWidget(self.nameLabel)
-        self.nameLineEdit = QtWidgets.QLineEdit(Dialog)
+        self.nameLineEdit = QtWidgets.QLineEdit(Form)
         self.nameLineEdit.setObjectName("nameLineEdit")
         self.horizontalLayout_2.addWidget(self.nameLineEdit)
         spacerItem2 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -47,10 +47,10 @@ class Ui_Dialog(object):
         self.verticalLayout.addLayout(self.horizontalLayout_2)
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.priceLabel = QtWidgets.QLabel(Dialog)
+        self.priceLabel = QtWidgets.QLabel(Form)
         self.priceLabel.setObjectName("priceLabel")
         self.horizontalLayout_4.addWidget(self.priceLabel)
-        self.priceLineEdit = QtWidgets.QLineEdit(Dialog)
+        self.priceLineEdit = QtWidgets.QLineEdit(Form)
         self.priceLineEdit.setObjectName("priceLineEdit")
         self.horizontalLayout_4.addWidget(self.priceLineEdit)
         spacerItem3 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -58,10 +58,10 @@ class Ui_Dialog(object):
         self.verticalLayout.addLayout(self.horizontalLayout_4)
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.amtLabel = QtWidgets.QLabel(Dialog)
+        self.amtLabel = QtWidgets.QLabel(Form)
         self.amtLabel.setObjectName("amtLabel")
         self.horizontalLayout_3.addWidget(self.amtLabel)
-        self.amtLineEdit = QtWidgets.QLineEdit(Dialog)
+        self.amtLineEdit = QtWidgets.QLineEdit(Form)
         self.amtLineEdit.setObjectName("amtLineEdit")
         self.horizontalLayout_3.addWidget(self.amtLineEdit)
         spacerItem4 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -71,16 +71,16 @@ class Ui_Dialog(object):
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
         spacerItem5 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem5)
-        self.submitPushButton = QtWidgets.QPushButton(Dialog)
+        self.submitPushButton = QtWidgets.QPushButton(Form)
         self.submitPushButton.setObjectName("submitPushButton")
         self.horizontalLayout_5.addWidget(self.submitPushButton)
         self.submitPushButton.clicked.connect(self.setValues) # THIS CONNECTS TO THE setValues DEF
         self.verticalLayout.addLayout(self.horizontalLayout_5)
-        self.retranslateUi(Dialog)
-        QtCore.QMetaObject.connectSlotsByName(Dialog)
+        self.retranslateUi(Form)
+        QtCore.QMetaObject.connectSlotsByName(Form)
 
 
-    def setValues(self, Dialog):
+    def setValues(self, Form):
         # nValue = self.nameLineEdit.text()
         # # nameLineEdit might not need to be error checked since it's a string and it can be named anything...?
         try:
@@ -102,20 +102,20 @@ class Ui_Dialog(object):
         insertData(pValue, aValue)
         checkData()
 
-    def retranslateUi(self, Dialog):
+    def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
-        self.titleLabel.setText(_translate("Dialog", "CBA TOOL"))
-        self.nameLabel.setText(_translate("Dialog", "Name:"))
-        self.priceLabel.setText(_translate("Dialog", "Price:"))
-        self.amtLabel.setText(_translate("Dialog", "Amt:"))
-        self.submitPushButton.setText(_translate("Dialog", "Submit"))
+        Form.setWindowTitle(_translate("Form", "ROI Tool"))
+        self.titleLabel.setText(_translate("Form", "CBA TOOL"))
+        self.nameLabel.setText(_translate("Form", "Name:"))
+        self.priceLabel.setText(_translate("Form", "Price:"))
+        self.amtLabel.setText(_translate("Form", "Amt:"))
+        self.submitPushButton.setText(_translate("Form", "Submit"))
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Dialog = QtWidgets.QDialog()
-    ui = Ui_Dialog()
-    ui.setupUi(Dialog)
-    Dialog.show()
+    Form = QtWidgets.QWidget()
+    ui = Ui_Form()
+    ui.setupUi(Form)
+    Form.show()
     sys.exit(app.exec_())
