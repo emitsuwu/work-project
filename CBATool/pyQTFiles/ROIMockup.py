@@ -14,10 +14,10 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(1366, 768)
-
-        # sets everything for the first row
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
+
+        # sets everything for the row 1
         self.row1Info = QtWidgets.QHBoxLayout()
         self.partComboBox = QtWidgets.QComboBox(Form)
         self.yearsSpinBox = QtWidgets.QSpinBox(Form)
@@ -57,21 +57,11 @@ class Ui_Form(object):
         self.sparesLabel.setFont(bold)
         self.yearsSpinBox.setSizePolicy(sizePolicy)
         self.sparesSpinBox.setSizePolicy(sizePolicy)
-        self.row1Info.addWidget(self.partComboBox)
-        self.row1Info.addWidget(self.yearsLabel)
-        self.row1Info.addWidget(self.yearsSpinBox)
-        self.row1Info.addWidget(self.sparesLabel)
-        self.row1Info.addWidget(self.sparesSpinBox)
-        self.verticalLayout.addLayout(self.row1Info)
-
-        # sets everything for row 2
-        self.row2Info = QtWidgets.QHBoxLayout()
         self.priceLabel = QtWidgets.QLabel(Form)
         self.learnRateSpinBox = QtWidgets.QSpinBox(Form)
         self.percentDecSpinBox = QtWidgets.QSpinBox(Form)
         self.learnRateLabel = QtWidgets.QLabel(Form)
         self.percentDecLabel = QtWidgets.QLabel(Form)
-        self.row2Info.setObjectName("row2Info")
         self.priceLabel.setObjectName("priceLabel")
         self.learnRateSpinBox.setObjectName("learnRateSpinBox")
         self.percentDecSpinBox.setObjectName("percentDecSpinBox")
@@ -87,13 +77,17 @@ class Ui_Form(object):
         self.percentDecLabel.setFont(bold)
         self.learnRateSpinBox.setSizePolicy(sizePolicy)
         self.percentDecSpinBox.setSizePolicy(sizePolicy)
-        self.row2Info.addWidget(self.priceLabel)
-        self.row2Info.addWidget(self.learnRateLabel)
-        self.row2Info.addWidget(self.learnRateSpinBox)
-        self.row2Info.addWidget(self.percentDecLabel)
-        self.row2Info.addWidget(self.percentDecSpinBox)
-        self.verticalLayout.addLayout(self.row2Info)
-
+        self.row1Info.addWidget(self.partComboBox)
+        self.row1Info.addWidget(self.priceLabel)
+        self.row1Info.addWidget(self.yearsLabel)
+        self.row1Info.addWidget(self.yearsSpinBox)
+        self.row1Info.addWidget(self.sparesLabel)
+        self.row1Info.addWidget(self.sparesSpinBox)
+        self.row1Info.addWidget(self.learnRateLabel)
+        self.row1Info.addWidget(self.learnRateSpinBox)
+        self.row1Info.addWidget(self.percentDecLabel)
+        self.row1Info.addWidget(self.percentDecSpinBox)
+        self.verticalLayout.addLayout(self.row1Info)
 
         # sets everything for row 3 (EXCLUSIVELY PUSH BUTTON INPUT)
         self.pushButtonRow = QtWidgets.QHBoxLayout()
