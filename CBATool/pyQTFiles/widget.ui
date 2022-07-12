@@ -22,7 +22,7 @@
         <bool>true</bool>
        </property>
        <property name="currentText">
-        <string>part id</string>
+        <string>Test 1</string>
        </property>
        <property name="maxVisibleItems">
         <number>100</number>
@@ -51,6 +51,12 @@
      </item>
      <item>
       <widget class="QSpinBox" name="yearsSpinBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimum">
         <number>1</number>
        </property>
@@ -71,6 +77,12 @@
      </item>
      <item>
       <widget class="QSpinBox" name="sparesSpinBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="maximum">
         <number>10000</number>
        </property>
@@ -99,6 +111,12 @@
      </item>
      <item>
       <widget class="QSpinBox" name="learnRateSpinBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimum">
         <number>1</number>
        </property>
@@ -109,6 +127,12 @@
      </item>
      <item>
       <widget class="QLabel" name="percentDecLabel">
+       <property name="font">
+        <font>
+         <weight>75</weight>
+         <bold>true</bold>
+        </font>
+       </property>
        <property name="text">
         <string>% dec:</string>
        </property>
@@ -119,6 +143,12 @@
      </item>
      <item>
       <widget class="QSpinBox" name="percentDecSpinBox">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="maximum">
         <number>100</number>
        </property>

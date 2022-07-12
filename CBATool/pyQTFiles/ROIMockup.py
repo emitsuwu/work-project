@@ -13,7 +13,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(600, 400)
+        Form.resize(1366, 768)
 
         # sets everything for the first row
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
@@ -43,6 +43,20 @@ class Ui_Form(object):
         self.yearsSpinBox.setMinimum(1)
         self.yearsSpinBox.setMaximum(100)
         self.sparesSpinBox.setMaximum(10000)
+
+        # since the fixed size policy is the same for all spinboxes, just need to define the policy once for all spinboxes
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.yearsSpinBox.sizePolicy().hasHeightForWidth())
+
+        bold = QtGui.QFont()
+        bold.setBold(True)
+        bold.setWeight(75)
+        self.yearsLabel.setFont(bold)
+        self.sparesLabel.setFont(bold)
+        self.yearsSpinBox.setSizePolicy(sizePolicy)
+        self.sparesSpinBox.setSizePolicy(sizePolicy)
         self.row1Info.addWidget(self.partComboBox)
         self.row1Info.addWidget(self.yearsLabel)
         self.row1Info.addWidget(self.yearsSpinBox)
@@ -68,6 +82,11 @@ class Ui_Form(object):
         self.learnRateSpinBox.setMinimum(1)
         self.learnRateSpinBox.setMaximum(100)
         self.percentDecSpinBox.setMaximum(100)
+        self.priceLabel.setFont(bold)
+        self.learnRateLabel.setFont(bold)
+        self.percentDecLabel.setFont(bold)
+        self.learnRateSpinBox.setSizePolicy(sizePolicy)
+        self.percentDecSpinBox.setSizePolicy(sizePolicy)
         self.row2Info.addWidget(self.priceLabel)
         self.row2Info.addWidget(self.learnRateLabel)
         self.row2Info.addWidget(self.learnRateSpinBox)
@@ -75,15 +94,8 @@ class Ui_Form(object):
         self.row2Info.addWidget(self.percentDecSpinBox)
         self.verticalLayout.addLayout(self.row2Info)
 
-        # sets everything for row 3 (EXCLUSIVELY THE TABLE)
-        self.tableInfo = QtWidgets.QHBoxLayout()
-        self.tableView = QtWidgets.QTableView(Form)
-        self.tableInfo.setObjectName("tableInfo")
-        self.tableView.setObjectName("tableView")
-        self.tableInfo.addWidget(self.tableView)
-        self.verticalLayout.addLayout(self.tableInfo)
 
-        # sets everything for row 4 (EXCLUSIVELY PUSH BUTTON INPUT)
+        # sets everything for row 3 (EXCLUSIVELY PUSH BUTTON INPUT)
         self.pushButtonRow = QtWidgets.QHBoxLayout()
         self.pushButtonRow.setObjectName("pushButtonRow")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -99,6 +111,14 @@ class Ui_Form(object):
         self.pushButtonRow.addWidget(self.pdfPushButton)
         self.verticalLayout.addLayout(self.pushButtonRow)
 
+        # sets everything for row 4 (EXCLUSIVELY THE TABLE)
+        self.tableInfo = QtWidgets.QHBoxLayout()
+        self.tableView = QtWidgets.QTableView(Form)
+        self.tableInfo.setObjectName("tableInfo")
+        self.tableView.setObjectName("tableView")
+        self.tableInfo.addWidget(self.tableView)
+        self.verticalLayout.addLayout(self.tableInfo)
+
         self.retranslateUi(Form)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
@@ -109,11 +129,11 @@ class Ui_Form(object):
         self.partComboBox.setItemText(0, _translate("Form", "Test 1"))
         self.partComboBox.setItemText(1, _translate("Form", "Test 2"))
         self.partComboBox.setItemText(2, _translate("Form", "Test 3"))
-        self.yearsLabel.setText(_translate("Form", "# years:"))
-        self.sparesLabel.setText(_translate("Form", "# spares:"))
-        self.priceLabel.setText(_translate("Form", "Price"))
+        self.yearsLabel.setText(_translate("Form", "no. of years:"))
+        self.sparesLabel.setText(_translate("Form", "no. of spares:"))
+        self.priceLabel.setText(_translate("Form", "price"))
         self.learnRateLabel.setText(_translate("Form", "learn rate:"))
-        self.percentDecLabel.setText(_translate("Form", "% dec:"))
+        self.percentDecLabel.setText(_translate("Form", "percent decrease:"))
         self.runPushButton.setText(_translate("Form", "RUN"))
         self.resetPushButton.setText(_translate("Form", "RESET"))
         self.pdfPushButton.setText(_translate("Form", "PDF"))
