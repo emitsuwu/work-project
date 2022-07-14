@@ -19,7 +19,7 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -46,6 +46,12 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="autoFillBackground">
+        <bool>false</bool>
+       </property>
+       <property name="inputMethodHints">
+        <set>Qt::ImhNone</set>
+       </property>
        <property name="editable">
         <bool>true</bool>
        </property>
@@ -54,6 +60,9 @@
        </property>
        <property name="maxVisibleItems">
         <number>100</number>
+       </property>
+       <property name="placeholderText">
+        <string/>
        </property>
        <item>
         <property name="text">
