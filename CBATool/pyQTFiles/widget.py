@@ -20,7 +20,7 @@ class Ui_Form(object):
         self.row1Info = QtWidgets.QHBoxLayout()
         self.row1Info.setObjectName("row1Info")
         self.label = QtWidgets.QLabel(Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Preferred)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
@@ -38,8 +38,11 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.partComboBox.sizePolicy().hasHeightForWidth())
         self.partComboBox.setSizePolicy(sizePolicy)
+        self.partComboBox.setAutoFillBackground(False)
+        self.partComboBox.setInputMethodHints(QtCore.Qt.ImhNone)
         self.partComboBox.setEditable(True)
         self.partComboBox.setMaxVisibleItems(100)
+        self.partComboBox.setPlaceholderText("")
         self.partComboBox.setObjectName("partComboBox")
         self.partComboBox.addItem("")
         self.partComboBox.addItem("")
@@ -131,6 +134,10 @@ class Ui_Form(object):
         self.verticalLayout.addLayout(self.pushButtonRow)
 
         self.retranslateUi(Form)
+        self.resetPushButton.clicked.connect(self.yearsSpinBox.stepDown)
+        self.resetPushButton.clicked.connect(self.sparesSpinBox.stepDown)
+        self.resetPushButton.clicked.connect(self.learnRateSpinBox.stepDown)
+        self.resetPushButton.clicked.connect(self.percentDecSpinBox.stepDown)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def retranslateUi(self, Form):

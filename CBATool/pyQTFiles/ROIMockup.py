@@ -121,7 +121,14 @@ class Ui_Form(object):
         self.verticalLayout.addLayout(self.tableInfo)
 
         self.retranslateUi(Form)
+        self.resetPushButton.clicked.connect(self.setValues)
         QtCore.QMetaObject.connectSlotsByName(Form)
+
+    def setValues(self, Form):
+        self.yearsSpinBox.setValue(1)
+        self.learnRateSpinBox.setValue(1)
+        self.sparesSpinBox.setValue(0)
+        self.percentDecSpinBox.setValue(0)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate

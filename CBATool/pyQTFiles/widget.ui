@@ -241,5 +241,70 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>resetPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>yearsSpinBox</receiver>
+   <slot>stepDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>271</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>236</x>
+     <y>19</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resetPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>sparesSpinBox</receiver>
+   <slot>stepDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>271</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>364</x>
+     <y>19</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resetPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>learnRateSpinBox</receiver>
+   <slot>stepDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>271</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>226</x>
+     <y>46</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>resetPushButton</sender>
+   <signal>clicked()</signal>
+   <receiver>percentDecSpinBox</receiver>
+   <slot>stepDown()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>271</x>
+     <y>308</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>370</x>
+     <y>46</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
