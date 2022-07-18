@@ -38,6 +38,7 @@ class Ui_Form(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.partComboBox.sizePolicy().hasHeightForWidth())
         self.partComboBox.setSizePolicy(sizePolicy)
+        self.partComboBox.setFocusPolicy(QtCore.Qt.StrongFocus)
         self.partComboBox.setAutoFillBackground(False)
         self.partComboBox.setInputMethodHints(QtCore.Qt.ImhNone)
         self.partComboBox.setEditable(True)
