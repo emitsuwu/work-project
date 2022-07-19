@@ -12,12 +12,10 @@ class NumericDelegate(QStyledItemDelegate):
             editor.setValidator(validator)
         return editor
 
-
-
 class Model(QAbstractTableModel):
     ActivateRole = Qt.UserRole + 1
 
-    def __init__(self, datain, headerdata, parent=None):
+    def __init__(self, datain, headerdata, row_names, parent=None):
         """
         Args:
             datain: a list of lists\n
@@ -26,10 +24,13 @@ class Model(QAbstractTableModel):
         super().__init__()
         self.arraydata = datain
         self.headerdata = headerdata
+        self.row_names = row_names
 
-    def headerdata(self, section, orientation, role):
+    def headerData(self, section, orientation, role):
         if role == Qt.DisplayRole and orientation == Qt.Horizontal:
             return QVariant(self.headerdata[section])
+        if orientation == Qt.Vertical and role == Qt.DisplayRole:
+            return QVariant(self.row_names[section])
         return QVariant()
 
     def rowCount(self, parent=QModelIndex()):
@@ -99,7 +100,7 @@ class Main(QMainWindow):
         spacer_item = QSpacerItem(0, 20, QSizePolicy.Expanding)
         self.run_button = QPushButton("Run")
         self.tabledata = [['Baseline', 1, 2, 3, 4], ['Learning Rate', 11, 12, 13, 14],
-                            ['% Decrease', 21, 22, 23, 24], ['# of Orders', 31, 32, 33, 34],
+                            ['% Decreased', 21, 22, 23, 24], ['# of Orders', 31, 32, 33, 34],
                             ['# of Parts', 41, 42, 43, 44]]
         self.table = self.create_table()
         delegate = NumericDelegate(self.table)
@@ -115,13 +116,16 @@ class Main(QMainWindow):
         self.centralwidget = QWidget()
         self.centralwidget.setLayout(main_layout)
         self.setCentralWidget(self.centralwidget)
-        super().resize(1280, 720)
+        self.resize(1280, 720)
 
     def create_table(self):
         tv = QTableView()
         # set header for comments
         header = ['', 'Year 1', 'Year 2', 'Year 3', 'Year 4']
-        tablemodel = Model(self.tabledata, header, self)
+        row_names = ['a', 'b','c','d','e']
+        tablemodel = Model(self.tabledata, header, row_names, self)
+        stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
+        tv.setStyleSheet(stylesheet)
         tv.setModel(tablemodel)
         tv.resizeRowsToContents()
         return tv
