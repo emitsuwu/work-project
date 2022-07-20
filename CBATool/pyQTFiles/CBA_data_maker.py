@@ -5,6 +5,11 @@ import os
 
 
 
+class Connection(object):
+    def __init__(self):
+        scenario_path = resource_path('') + 'test.db'
+
+        self.dbConn = sqlite3.connect(scenario_path)
 
 def resource_path(relative_path):
     """
@@ -23,29 +28,37 @@ def resource_path(relative_path):
     path = os.path.join(base_path, relative_path)
     return os.path.join(path)
 
-
-scenario_path = resource_path('') + 'test.db'
-
-dbConn = sqlite3.connect(scenario_path)
+connections = Connection()
 
 
-query = "SELECT part_id, part_name, part_cost FROM parts"
+def get_cba_part_data(part_name):
 
 
-
-parts_df = pd.read_sql_query(query, dbConn)
-
-part_ids = parts_df['part_id'].to_list()
-
-part_names = parts_df['part_name'].to_list()
-
-part_costs = parts_df['part_cost'].to_list()
+    query = f"SELECT part_id, part_cost FROM parts WHERE part_name = '{part_name}'"
 
 
 
-print(part_ids)
+    parts_df = pd.read_sql_query(query, connections.dbConn)
 
-print(part_names)
 
-print(part_costs)
 
+    print(parts_df)
+
+
+    return parts_df
+
+
+def get_cba_parts_list():
+
+
+    query = f"SELECT part_name FROM parts "
+
+
+
+    part_names_df = pd.read_sql_query(query, connections.dbConn)
+
+    part_names_list = part_names_df['part_name'].to_list()
+
+    return part_names_list
+
+# get_cba_part_data("Leaf Part")
