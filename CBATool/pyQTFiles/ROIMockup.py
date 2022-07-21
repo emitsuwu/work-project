@@ -195,29 +195,39 @@ class Ui_Form(object):
         # sets everything for the row 1
         self.row1Info = QtWidgets.QHBoxLayout()
         self.partComboBox = ExtendedComboBox()
-        self.yearsSpinBox = QtWidgets.QSpinBox(Form)
+        self.ordersSpinBox = QtWidgets.QSpinBox(Form)
         self.sparesSpinBox = QtWidgets.QSpinBox(Form)
+        self.yearsSpinBox = QtWidgets.QSpinBox(Form)
         self.partLabel = QtWidgets.QLabel(Form)
-        self.yearsLabel = QtWidgets.QLabel(Form)
+        self.ordersLabel = QtWidgets.QLabel(Form)
         self.sparesLabel = QtWidgets.QLabel(Form)
+        self.yearsLabel = QtWidgets.QLabel(Form)
 
         # changing all settings for partComboBox
         self.partComboBox.setEditable(True)
         self.partComboBox.setMaxVisibleItems(100)
 
+        # self.partComboBox.addItem("")
+
         self.row1Info.setObjectName("row1Info")
         self.partComboBox.setObjectName("partComboBox")
-        self.yearsSpinBox.setObjectName("yearsSpinBox")
+        self.ordersSpinBox.setObjectName("ordersSpinBox")
         self.sparesSpinBox.setObjectName("sparesSpinBox")
+        self.yearsSpinBox.setObjectName("yearsSpinBox")
         self.partLabel.setObjectName("partLabel")
-        self.yearsLabel.setObjectName("yearsLabel")
+        self.ordersLabel.setObjectName("ordersLabel")
         self.sparesLabel.setObjectName("sparesLabel")
+        self.yearsLabel.setObjectName("yearsLabel")
         # self.partLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
-        self.yearsLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.ordersLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.sparesLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+        self.yearsLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
+
+        self.ordersSpinBox.setMinimum(1)
+        self.ordersSpinBox.setMaximum(1000) # <-------------- THIS CAN BE SUBJECT TO CHANGE AT ANY POINT
+        self.sparesSpinBox.setMaximum(10000)
         self.yearsSpinBox.setMinimum(1)
         self.yearsSpinBox.setMaximum(100)
-        self.sparesSpinBox.setMaximum(10000)
 
         # since the fixed size policy is the same for all spinboxes, just need to define the policy once for all spinboxes
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -229,12 +239,15 @@ class Ui_Form(object):
         bold.setBold(True)
         bold.setWeight(75)
         self.partLabel.setFont(bold)
-        self.yearsLabel.setFont(bold)
+        self.ordersLabel.setFont(bold)
         self.sparesLabel.setFont(bold)
+        self.yearsLabel.setFont(bold)
         self.partComboBox.setSizePolicy(sizePolicy)
         self.partLabel.setSizePolicy(sizePolicy)
-        self.yearsSpinBox.setSizePolicy(sizePolicy)
+        self.ordersSpinBox.setSizePolicy(sizePolicy)
         self.sparesSpinBox.setSizePolicy(sizePolicy)
+        self.yearsSpinBox.setSizePolicy(sizePolicy)
+
         self.priceLabel = QtWidgets.QLabel(Form)
         self.learnRateSpinBox = QtWidgets.QSpinBox(Form)
         self.percentDecSpinBox = QtWidgets.QSpinBox(Form)
@@ -258,17 +271,19 @@ class Ui_Form(object):
         self.row1Info.addWidget(self.partLabel)
         self.row1Info.addWidget(self.partComboBox)
         self.row1Info.addWidget(self.priceLabel)
-        self.row1Info.addWidget(self.yearsLabel)
-        self.row1Info.addWidget(self.yearsSpinBox)
+        self.row1Info.addWidget(self.ordersLabel)
+        self.row1Info.addWidget(self.ordersSpinBox)
         self.row1Info.addWidget(self.sparesLabel)
         self.row1Info.addWidget(self.sparesSpinBox)
+        self.row1Info.addWidget(self.yearsLabel)
+        self.row1Info.addWidget(self.yearsSpinBox)
         self.row1Info.addWidget(self.learnRateLabel)
         self.row1Info.addWidget(self.learnRateSpinBox)
         self.row1Info.addWidget(self.percentDecLabel)
         self.row1Info.addWidget(self.percentDecSpinBox)
         self.verticalLayout.addLayout(self.row1Info)
 
-        # sets everything for row 3 (EXCLUSIVELY PUSH BUTTON INPUT)
+        # sets everything for row 2 (EXCLUSIVELY PUSH BUTTON INPUT)
         self.pushButtonRow = QtWidgets.QHBoxLayout()
         self.pushButtonRow.setObjectName("pushButtonRow")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -284,7 +299,7 @@ class Ui_Form(object):
         self.pushButtonRow.addWidget(self.pdfPushButton)
         self.verticalLayout.addLayout(self.pushButtonRow)
 
-        # sets everything for row 4 (EXCLUSIVELY THE TABLE)
+        # sets everything for row 3 (EXCLUSIVELY THE TABLE)
         self.tableInfo = QtWidgets.QHBoxLayout()
         self.tableView = QtWidgets.QTableView()
         self.tableInfo.setObjectName("tableInfo")
@@ -296,29 +311,52 @@ class Ui_Form(object):
         self.resetPushButton.clicked.connect(self.setValues)
         self.runPushButton.clicked.connect(self.runClicked)
         self.runPushButton.clicked.connect(NumericDelegate)
-        # self.runPushButton.clicked.connect(Model)
         self.runPushButton.clicked.connect(Main)
         QtCore.QMetaObject.connectSlotsByName(Form)
 
     def setValues(self, Form):
+        '''
+            setting values for spinboxes
+            returns: None
+        '''
         self.yearsSpinBox.setValue(1)
         self.learnRateSpinBox.setValue(1)
         self.sparesSpinBox.setValue(0)
         self.percentDecSpinBox.setValue(0)
 
     def runClicked(self, Form):
+        '''
+            generates populated table based on spinbox values and selected part in combobox
+        '''
         current_part_name = self.partComboBox.currentText()
         year_range = self.yearsSpinBox.value()
         print(year_range)
+        orders_value = self.ordersSpinBox.value()
         spare_value = self.sparesSpinBox.value()
         percentDecValue = self.percentDecSpinBox.value()
         learnRateValue = self.learnRateSpinBox.value()
-
-
-
+        totalParts = spare_value + orders_value
 
         current_part_data = get_cba_part_data(current_part_name)
         current_part_cost = current_part_data['part_cost'][0]
+        baseline = current_part_cost * totalParts
+        trueLearnRate = baseline * (1 - learnRateValue)
+        truePercentDecrease = trueLearnRate * (1 - percentDecValue)
+
+        # calculating # of parts per year
+        if totalParts >= year_range:
+            temp = totalParts % year_range
+            temp_2 = totalParts - temp
+            temp_3 = temp_2 / year_range
+            row_list = [temp_3] * year_range
+            if temp:
+                for x in range(temp):
+                    row_list[-(x+1)] = temp_3 + 1
+            print("BELOW THIS IS THE LIST THAT HAS ALL THE ORDERS GENERALLY OPTIMIZED")
+            print(row_list)
+        else:
+            print("get good")
+
         print(f"current_part_cost: {current_part_cost}")
         part_cost_string = "${0:.2f}".format(current_part_cost)
         self.priceLabel.setText(part_cost_string)
@@ -330,6 +368,8 @@ class Ui_Form(object):
         row_names = ['a', 'b','c','d','e']
         tablemodel = Model(self.tabledata, header, row_names, self)
         self.tableView.setModel(tablemodel)
+        stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
+        self.tableView.setStyleSheet(stylesheet)
         self.tableView.show()
 
     def retranslateUi(self, Form):
@@ -337,16 +377,18 @@ class Ui_Form(object):
         Form.setWindowTitle(_translate("Form", "ROIMockup"))
 
         string_list = get_cba_parts_list()
+        # self.partComboBox.setCurrentText(_translate("Form", "default"))
         self.partComboBox.addItems(string_list)
-        self.partLabel.setText(_translate("Form", "select part:"))
-        self.yearsLabel.setText(_translate("Form", "no. of years:"))
-        self.sparesLabel.setText(_translate("Form", "no. of spares:"))
-        self.priceLabel.setText(_translate("Form", "[PRICE WILL SHOW HERE]"))
-        self.learnRateLabel.setText(_translate("Form", "learn rate:"))
-        self.percentDecLabel.setText(_translate("Form", "percent decrease:"))
-        self.runPushButton.setText(_translate("Form", "RUN"))
-        self.resetPushButton.setText(_translate("Form", "RESET"))
-        self.pdfPushButton.setText(_translate("Form", "PDF"))
+        self.partLabel.setText("select part:")
+        self.ordersLabel.setText("no. of orders:")
+        self.sparesLabel.setText("no. of spares:")
+        self.yearsLabel.setText("no. of years:")
+        self.priceLabel.setText("{}")
+        self.learnRateLabel.setText("learn rate:")
+        self.percentDecLabel.setText("percent decrease")
+        self.runPushButton.setText("RUN")
+        self.resetPushButton.setText("RESET")
+        self.pdfPushButton.setText("PDF")
 
 
 
