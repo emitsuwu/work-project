@@ -207,7 +207,7 @@ class Ui_Form(object):
         self.partComboBox.setEditable(True)
         self.partComboBox.setMaxVisibleItems(100)
 
-        # self.partComboBox.addItem("")
+        self.partComboBox.setCurrentText("{default}")
 
         self.row1Info.setObjectName("row1Info")
         self.partComboBox.setObjectName("partComboBox")
@@ -319,6 +319,8 @@ class Ui_Form(object):
             setting values for spinboxes
             returns: None
         '''
+        self.partComboBox.setCurrentText("{default}")
+        self.priceLabel.setText("Part Cost: ")
         self.yearsSpinBox.setValue(1)
         self.learnRateSpinBox.setValue(1)
         self.sparesSpinBox.setValue(0)
@@ -328,6 +330,9 @@ class Ui_Form(object):
         '''
             generates populated table based on spinbox values and selected part in combobox
         '''
+        if self.partComboBox.currentText() == "{default}":
+            return
+
         current_part_name = self.partComboBox.currentText()
         year_range = self.yearsSpinBox.value()
         print(year_range)
@@ -359,7 +364,8 @@ class Ui_Form(object):
 
         print(f"current_part_cost: {current_part_cost}")
         part_cost_string = "${0:.2f}".format(current_part_cost)
-        self.priceLabel.setText(part_cost_string)
+        self.priceLabel.setText("Part Cost: ")
+        self.priceLabel.setText(str(self.priceLabel.text() + part_cost_string))
 
         self.tabledata = [['Baseline', 1, 2, 3, 4], ['Learning Rate', 11, 12, 13, 14],
                             ['% Decreased', 21, 22, 23, 24], ['# of Orders', 31, 32, 33, 34],
@@ -376,14 +382,14 @@ class Ui_Form(object):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "ROIMockup"))
 
+        self.partComboBox.setPlaceholderText("{default}")
         string_list = get_cba_parts_list()
-        # self.partComboBox.setCurrentText(_translate("Form", "default"))
         self.partComboBox.addItems(string_list)
         self.partLabel.setText("select part:")
         self.ordersLabel.setText("no. of orders:")
         self.sparesLabel.setText("no. of spares:")
         self.yearsLabel.setText("no. of years:")
-        self.priceLabel.setText("{}")
+        self.priceLabel.setText("Part Cost: ")
         self.learnRateLabel.setText("learn rate:")
         self.percentDecLabel.setText("percent decrease")
         self.runPushButton.setText("RUN")
