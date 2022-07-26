@@ -13,9 +13,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from CBA_data_maker import *
+import pandas as pd
 import re
 
 class ExtendedComboBox(QComboBox):
+    '''
+    This class is responsible for the searching, sorting, and filtering for the partComboBox; very important
+    '''
     def __init__(self, parent=None):
         super(ExtendedComboBox, self).__init__(parent)
 
@@ -59,7 +63,10 @@ class ExtendedComboBox(QComboBox):
         self.pFilterModel.setFilterKeyColumn(column)
         super(ExtendedComboBox, self).setModelColumn(column)
 
-
+'''
+    The NumericDelegate, Model, and Main classes are used to generate a tablemodel in a QTableView,
+    and also allow said tablemodel to be editable.
+'''
 class NumericDelegate(QStyledItemDelegate):
     def createEditor(self, parent, option, index):
         editor = super(NumericDelegate, self).createEditor(parent, option, index)
@@ -74,11 +81,12 @@ class Model(QAbstractTableModel):
 
     def __init__(self, datain, headerdata, row_names, parent=None):
         super().__init__()
-        """
+        self._data = datain
+        '''
         Args:
             datain: a list of lists\n
             headerdata:a list of strings
-        """
+        '''
         self.arraydata = datain
         self.headerdata = headerdata
         self.row_names = row_names
@@ -109,7 +117,20 @@ class Model(QAbstractTableModel):
             return QVariant()
         elif role != Qt.DisplayRole:
             return QVariant()
+        elif role == Qt.TextAlignmentRole:
+            return int(Qt.AlignCenter | Qt.AlignVCenter)
         return QVariant(self.arraydata[index.row()][index.column()])
+
+
+    # 
+    # def data(self, index, role):
+    #     if role == Qt.DisplayRole:
+    #         value = self._data.iloc[index.row(), index.column()]
+    #         return str(value)
+    #     elif role == Qt.TextAlignmentRole:
+    #         return int(Qt.AlignCenter | Qt.AlignVCenter)
+
+
 
     def setData(self, index, value, role=Qt.EditRole):
         r = re.compile(r"^[0-9]\d*(\.\d+)?$")
@@ -152,33 +173,20 @@ class Model(QAbstractTableModel):
 
 class Main(QMainWindow):
     def __init__(self,parent=None):
-        # spacer_item = QSpacerItem(0, 20, QSizePolicy.Expanding)
-        # self.run_button = QPushButton("Run")
-        self.tabledata = [['Baseline', 1, 2, 3, 4], ['Learning Rate', 11, 12, 13, 14],
-                            ['% Decreased', 21, 22, 23, 24], ['# of Orders', 31, 32, 33, 34],
-                            ['# of Parts', 41, 42, 43, 44]]
+        self.tabledata = [[1, 2, 3, 4], [11, 12, 13, 14], [21, 22, 23, 24],
+                                [31, 32, 33, 34]]
+        self.df = pd.DataFrame(self.tabledata)
         self.table = self.create_table()
         delegate = NumericDelegate(self.table)
         self.table.setItemDelegate(delegate)
-        # row_1 = QHBoxLayout()
-        # row_2 = QHBoxLayout()
-        # row_1.addWidget(self.table)
-        # row_2.addSpacerItem(spacer_item)
-        # row_2.addWidget(self.run_button)
-        # main_layout = QVBoxLayout()
-        # main_layout.addLayout(row_1)
-        # main_layout.addLayout(row_2)
-        # self.centralwidget = QWidget()
-        # self.centralwidget.setLayout(main_layout)
-        # self.setCentralWidget(self.centralwidget)
-        # self.resize(1280, 720)
 
     def create_table(self):
         tv = QTableView()
-        # set header for comments
-        header = ['', 'Year 1', 'Year 2', 'Year 3', 'Year 4']
-        row_names = ['a', 'b','c','d','e']
-        tablemodel = Model(self.tabledata, header, row_names, self)
+
+        self.df.columns = ['Year 1', 'Year 2', 'Year 3', 'Year 4']
+        self.index = ['Baseline', 'Percent Decrease', '# of parts', '# of spares']
+        self.df = pd.DataFrame(self.tabledata)
+        tablemodel = Model(self.tabledata, self.df.columns, self.index, self)
         stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
         tv.setStyleSheet(stylesheet)
         tv.setModel(tablemodel)
@@ -186,6 +194,9 @@ class Main(QMainWindow):
         return tv
 
 class Ui_Form(object):
+    '''
+    Creates each widget for the gui, and sets each of the widget's attributes accordingly
+    '''
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(1366, 768)
@@ -218,7 +229,6 @@ class Ui_Form(object):
         self.ordersLabel.setObjectName("ordersLabel")
         self.sparesLabel.setObjectName("sparesLabel")
         self.yearsLabel.setObjectName("yearsLabel")
-        # self.partLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.ordersLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.sparesLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
         self.yearsLabel.setAlignment(QtCore.Qt.AlignRight|QtCore.Qt.AlignTrailing|QtCore.Qt.AlignVCenter)
@@ -271,29 +281,27 @@ class Ui_Form(object):
         self.row1Info.addWidget(self.partLabel)
         self.row1Info.addWidget(self.partComboBox)
         self.row1Info.addWidget(self.priceLabel)
-        self.row1Info.addWidget(self.ordersLabel)
-        self.row1Info.addWidget(self.ordersSpinBox)
-        self.row1Info.addWidget(self.sparesLabel)
-        self.row1Info.addWidget(self.sparesSpinBox)
-        self.row1Info.addWidget(self.yearsLabel)
-        self.row1Info.addWidget(self.yearsSpinBox)
-        self.row1Info.addWidget(self.learnRateLabel)
-        self.row1Info.addWidget(self.learnRateSpinBox)
-        self.row1Info.addWidget(self.percentDecLabel)
-        self.row1Info.addWidget(self.percentDecSpinBox)
         self.verticalLayout.addLayout(self.row1Info)
 
         # sets everything for row 2 (EXCLUSIVELY PUSH BUTTON INPUT)
         self.pushButtonRow = QtWidgets.QHBoxLayout()
         self.pushButtonRow.setObjectName("pushButtonRow")
-        spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.runPushButton = QtWidgets.QPushButton(Form)
         self.resetPushButton = QtWidgets.QPushButton(Form)
         self.pdfPushButton = QtWidgets.QPushButton(Form)
         self.runPushButton.setObjectName("runPushButton")
         self.resetPushButton.setObjectName("resetPushButton")
         self.pdfPushButton.setObjectName("pdfPushButton")
-        self.pushButtonRow.addItem(spacerItem)
+        self.pushButtonRow.addWidget(self.ordersLabel)
+        self.pushButtonRow.addWidget(self.ordersSpinBox)
+        self.pushButtonRow.addWidget(self.sparesLabel)
+        self.pushButtonRow.addWidget(self.sparesSpinBox)
+        self.pushButtonRow.addWidget(self.yearsLabel)
+        self.pushButtonRow.addWidget(self.yearsSpinBox)
+        self.pushButtonRow.addWidget(self.learnRateLabel)
+        self.pushButtonRow.addWidget(self.learnRateSpinBox)
+        self.pushButtonRow.addWidget(self.percentDecLabel)
+        self.pushButtonRow.addWidget(self.percentDecSpinBox)
         self.pushButtonRow.addWidget(self.runPushButton)
         self.pushButtonRow.addWidget(self.resetPushButton)
         self.pushButtonRow.addWidget(self.pdfPushButton)
@@ -321,10 +329,12 @@ class Ui_Form(object):
         '''
         self.partComboBox.setCurrentText("{default}")
         self.priceLabel.setText("Part Cost: ")
+        self.ordersSpinBox.setValue(1)
         self.yearsSpinBox.setValue(1)
         self.learnRateSpinBox.setValue(1)
         self.sparesSpinBox.setValue(0)
         self.percentDecSpinBox.setValue(0)
+        self.tableView.setModel(None)
 
     def runClicked(self, Form):
         '''
@@ -344,9 +354,14 @@ class Ui_Form(object):
 
         current_part_data = get_cba_part_data(current_part_name)
         current_part_cost = current_part_data['part_cost'][0]
+
+        '''
+        the formulas below are what's used to calculate values to be placed in each tablemodel cell
+        '''
         baseline = current_part_cost * totalParts
         trueLearnRate = baseline * (1 - learnRateValue)
         truePercentDecrease = trueLearnRate * (1 - percentDecValue)
+
 
         # calculating # of parts per year
         if totalParts >= year_range:
@@ -367,12 +382,13 @@ class Ui_Form(object):
         self.priceLabel.setText("Part Cost: ")
         self.priceLabel.setText(str(self.priceLabel.text() + part_cost_string))
 
-        self.tabledata = [['Baseline', 1, 2, 3, 4], ['Learning Rate', 11, 12, 13, 14],
-                            ['% Decreased', 21, 22, 23, 24], ['# of Orders', 31, 32, 33, 34],
-                            ['# of Parts', 41, 42, 43, 44]]
-        header = ['', 'Year 1', 'Year 2', 'Year 3', 'Year 4']
-        row_names = ['a', 'b','c','d','e']
-        tablemodel = Model(self.tabledata, header, row_names, self)
+        self.tabledata = [[1, 2, 3, 4], [11, 12, 13, 14], [21, 22, 23, 24],
+                            [31, 32, 33, 34]]
+        self.index = ['Baseline', 'Percent Decrease', '# of parts', '# of spares']
+        self.df = pd.DataFrame(self.tabledata)
+        self.df.columns = ['Year 1', 'Year 2', 'Year 3', 'Year 4']
+
+        tablemodel = Model(self.tabledata, self.df.columns, self.index, self)
         self.tableView.setModel(tablemodel)
         stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
         self.tableView.setStyleSheet(stylesheet)
@@ -391,7 +407,7 @@ class Ui_Form(object):
         self.yearsLabel.setText("no. of years:")
         self.priceLabel.setText("Part Cost: ")
         self.learnRateLabel.setText("learn rate:")
-        self.percentDecLabel.setText("percent decrease")
+        self.percentDecLabel.setText("percent decrease:")
         self.runPushButton.setText("RUN")
         self.resetPushButton.setText("RESET")
         self.pdfPushButton.setText("PDF")
