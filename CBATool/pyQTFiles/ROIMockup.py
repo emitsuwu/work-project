@@ -102,33 +102,40 @@ class Model(QAbstractTableModel):
         if parent.isValid(): return 0
         return len(self.arraydata)
 
-    def columnCount(self, parent=QModelIndex()):
-        if parent.isValid():
-            return 0
-        if len(self.arraydata) > 0:
-            return len(self.arraydata[0])
+    # def columnCount(self, parent=QModelIndex()):
+    #     if parent.isValid():
+    #         return 0
+    #     if len(self.arraydata) > 0:
+    #         return len(self.arraydata[0])
+    #     return 0
+
+    def columnCount(self, parent=QModelIndex()) -> int:
+        """
+        Override method from QAbstractTableModel
+        Return column count of the pandas DataFrame
+        """
+        if parent == QModelIndex():
+            return len(self._data.columns)
         return 0
 
     def flags(self, index):
         return Qt.ItemIsEditable | Qt.ItemIsEnabled | Qt.ItemIsSelectable
-
-    def data(self, index, role):
-        if not index.isValid():
-            return QVariant()
-        elif role != Qt.DisplayRole:
-            return QVariant()
-        elif role == Qt.TextAlignmentRole:
-            return int(Qt.AlignCenter | Qt.AlignVCenter)
-        return QVariant(self.arraydata[index.row()][index.column()])
-
-
-    # 
+    #
     # def data(self, index, role):
-    #     if role == Qt.DisplayRole:
-    #         value = self._data.iloc[index.row(), index.column()]
-    #         return str(value)
+    #     if not index.isValid():
+    #         return QVariant()
+    #     elif role != Qt.DisplayRole:
+    #         return QVariant()
     #     elif role == Qt.TextAlignmentRole:
     #         return int(Qt.AlignCenter | Qt.AlignVCenter)
+    #     return QVariant(self.arraydata[index.row()][index.column()])
+
+    def data(self, index, role):
+        if role == Qt.DisplayRole:
+            value = self._data.iloc[index.row(), index.column()]
+            return str(value)
+        elif role == Qt.TextAlignmentRole:
+            return int(Qt.AlignCenter | Qt.AlignVCenter)
 
 
 
@@ -173,6 +180,7 @@ class Model(QAbstractTableModel):
 
 class Main(QMainWindow):
     def __init__(self,parent=None):
+        super().__init__()
         self.tabledata = [[1, 2, 3, 4], [11, 12, 13, 14], [21, 22, 23, 24],
                                 [31, 32, 33, 34]]
         self.df = pd.DataFrame(self.tabledata)
@@ -186,7 +194,7 @@ class Main(QMainWindow):
         self.df.columns = ['Year 1', 'Year 2', 'Year 3', 'Year 4']
         self.index = ['Baseline', 'Percent Decrease', '# of parts', '# of spares']
         self.df = pd.DataFrame(self.tabledata)
-        tablemodel = Model(self.tabledata, self.df.columns, self.index, self)
+        tablemodel = Model(self.df, self.df.columns, self.index, self)
         stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
         tv.setStyleSheet(stylesheet)
         tv.setModel(tablemodel)
@@ -345,7 +353,7 @@ class Ui_Form(object):
 
         current_part_name = self.partComboBox.currentText()
         year_range = self.yearsSpinBox.value()
-        print(year_range)
+        # print(year_range)
         orders_value = self.ordersSpinBox.value()
         spare_value = self.sparesSpinBox.value()
         percentDecValue = self.percentDecSpinBox.value()
@@ -356,14 +364,18 @@ class Ui_Form(object):
         current_part_cost = current_part_data['part_cost'][0]
 
         '''
-        the formulas below are what's used to calculate values to be placed in each tablemodel cell
+        the formulas below are what's used to calculate
+        values to be placed in each tablemodel cell
         '''
         baseline = current_part_cost * totalParts
         trueLearnRate = baseline * (1 - learnRateValue)
         truePercentDecrease = trueLearnRate * (1 - percentDecValue)
 
 
-        # calculating # of parts per year
+        '''
+        formula to calculate backended even
+        spread of parts between years
+        '''
         if totalParts >= year_range:
             temp = totalParts % year_range
             temp_2 = totalParts - temp
@@ -377,18 +389,20 @@ class Ui_Form(object):
         else:
             print("get good")
 
-        print(f"current_part_cost: {current_part_cost}")
+        # print(f"current_part_cost: {current_part_cost}")
         part_cost_string = "${0:.2f}".format(current_part_cost)
         self.priceLabel.setText("Part Cost: ")
         self.priceLabel.setText(str(self.priceLabel.text() + part_cost_string))
 
         self.tabledata = [[1, 2, 3, 4], [11, 12, 13, 14], [21, 22, 23, 24],
-                            [31, 32, 33, 34]]
+                        [31, 32, 33, 34]]
         self.index = ['Baseline', 'Percent Decrease', '# of parts', '# of spares']
         self.df = pd.DataFrame(self.tabledata)
         self.df.columns = ['Year 1', 'Year 2', 'Year 3', 'Year 4']
 
-        tablemodel = Model(self.tabledata, self.df.columns, self.index, self)
+
+
+        tablemodel = Model(self.df, self.df.columns, self.index, self)
         self.tableView.setModel(tablemodel)
         stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
         self.tableView.setStyleSheet(stylesheet)
