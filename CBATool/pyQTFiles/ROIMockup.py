@@ -388,11 +388,27 @@ class Ui_Form(object):
             temp_2 = totalParts - temp
             temp_3 = temp_2 / year_range
             row_list = [temp_3] * year_range
+            spares_list = [temp_3] * year_range
             if temp:
                 for x in range(temp):
                     row_list[-(x+1)] = temp_3 + 1
+            '''
+            Apologies if this is a bit roundabout, but this sets the spares_list to be exactly the same as the row_list
+            and checks to see if their index values are different, and if they are, then the spares_list value at that
+            index is set to 1. If the year count is set to 1, then the spares_list value will be self.sparesSpinBox.value()
+            '''
+            y = 0
+            if year_range > 1:
+                for x in range(year_range):
+                    if row_list[x] == row_list[y]:
+                        spares_list[x] = 0
+                    else:
+                        spares_list[x] = 1
+            else:
+                spares_list[y] = spare_value
             print("BELOW THIS IS THE LIST THAT HAS ALL THE ORDERS GENERALLY OPTIMIZED")
             print(row_list)
+            print(spares_list)
         else:
             print("get good")
 
@@ -401,11 +417,28 @@ class Ui_Form(object):
         self.priceLabel.setText("Part Cost: ")
         self.priceLabel.setText(str(self.priceLabel.text() + part_cost_string))
 
-        self.tabledata = [[1, 2, 3, 4], [11, 12, 13, 14], [21, 22, 23, 24],
-                        [31, 32, 33, 34]]
+        self.tabledata = [baseline, truePercentDecrease, row_list,
+                        spares_list]
         self.index = ['Baseline', 'Percent Decrease', '# of parts', '# of spares']
         self.df = pd.DataFrame(self.tabledata)
-        self.df.columns = ['Year 1', 'Year 2', 'Year 3', 'Year 4']
+
+        '''
+        SO FAR THIS SECTION IS GOOD FOR:
+            ADDING YEARS BASED ON "No. of Years" SPINBOX
+        THIS SECTION NEEDS TO ADD IMPLEMENTATION OF:
+            ORDERS SPINGBOX
+            PERCENT DECREASE SPINBOX
+            LEARN RATE SPINBOX
+        '''
+
+
+        # self.df.columns = ['Yea 1', 'Yea 2', 'Yea 3', 'Yea 4']
+        # # self.df.columns = ['Year 1']
+        i = 1
+        while(i <= self.yearsSpinBox.value()):
+            self.df.insert(i, 'Year ' + str(i), True)
+            i += 1
+
 
 
 
@@ -414,11 +447,6 @@ class Ui_Form(object):
         stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
         self.tableView.setStyleSheet(stylesheet)
         self.tableView.show()
-        # print(self.df)
-        # print("\n")
-        # temp_list=self.df.values
-        # temp_df = pd.DataFrame(temp_list, columns=['Baseline', 'Percent Decrease', '# of parts', '# of spares'])
-        # pdf_report(temp_df)
 
     def pdfClicked(self, Form):
         print(self.df)
