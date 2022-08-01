@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from PyQt5.QtCore import *
 from CBA_data_maker import *
+from pdf_report import *
 import pandas as pd
 import re
 
@@ -331,6 +332,7 @@ class Ui_Form(object):
         self.retranslateUi(Form)
         self.resetPushButton.clicked.connect(self.setValues)
         self.runPushButton.clicked.connect(self.runClicked)
+        self.pdfPushButton.clicked.connect(self.pdfClicked)
         self.runPushButton.clicked.connect(NumericDelegate)
         self.runPushButton.clicked.connect(Main)
         QtCore.QMetaObject.connectSlotsByName(Form)
@@ -412,6 +414,18 @@ class Ui_Form(object):
         stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
         self.tableView.setStyleSheet(stylesheet)
         self.tableView.show()
+        # print(self.df)
+        # print("\n")
+        # temp_list=self.df.values
+        # temp_df = pd.DataFrame(temp_list, columns=['Baseline', 'Percent Decrease', '# of parts', '# of spares'])
+        # pdf_report(temp_df)
+
+    def pdfClicked(self, Form):
+        print(self.df)
+        print("\n")
+        temp_list = self.df.values
+        temp_df = pd.DataFrame(temp_list, columns=['Baseline', 'Percent Decrease', '# of parts', '# of spares'])
+        pdf_report(temp_df)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate

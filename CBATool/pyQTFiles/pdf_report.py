@@ -10,7 +10,7 @@ def pdf_report(df):
     pdf_name = f"ROI Report {time_title}.pdf"
     pdf = FPDF()
     pdf.add_page()
-    col_width = 190/6
+    col_width = 190/5
     pdf.set_font("Arial", 'B', 12)
     pdf.cell(190, 10, f'{pdf_name}', 0, 0, 'C')
     pdf.ln(10)
@@ -18,9 +18,11 @@ def pdf_report(df):
     offset = pdf.x
     top = pdf.y
     pdf.set_fill_color(168, 168, 168)
+    print(df)
+    print(type(df))
     for row in df:
-        pdf.multi_cell(col_width, 10, row, border=1, align='C',
-                       max_line_height=pdf.font_size, fill=True)
+        pdf.multi_cell(col_width, 10, str(row), border=1, align='C',
+            max_line_height=pdf.font_size, fill=True)
         offset += col_width
         pdf.set_x(offset)
         pdf.y = top
@@ -41,13 +43,11 @@ def pdf_report(df):
                 pdf.cell(col_width, 10, str(df[row][i]), border=1, align='C', fill=True)
             else:
                 pdf.cell(col_width, 10, str(df[row][i]), border=1, align='C')
-
-            # pdf.cell(col_width, 10, str(df[row][i]), 1, 0, 'C')
         pdf.ln(10)
         count += 1
     pdf.output(name=pdf_name, dest="F")
     current_path = os.getcwd()
-    home_path = os.path.expanduser('~/Desktop/ESCAP_FILES')
+    home_path = os.path.expanduser('~/Downloads')
     try:
         os.remove(f"{home_path}/{pdf_name}")
         shutil.move(f"{current_path}/{pdf_name}",
