@@ -1,15 +1,15 @@
 # -*- mode: python ; coding: utf-8 -*-
 
 
-block_cipher = None
+block_cipher = Nones
 
 
-a = Analysis(['windowController.py'],
-             pathex=['C:\\dev\\db testing\\escap'],
+a = Analysis(['<file taht kicks off your widget>.py'],
+             pathex=['<path you are looking at ???>'],
              binaries=[],
-             datas=[('qt.conf', '.'),('./bom_dbs/hel_assesment_bom.db', './bom_dbs/'),
-             ('./user_scenarios/new_scencario.db', './user_scenarios/'),('../escap/last_session_info.log', './escap/'),
-             ('C:\\dev\\escapvenv\\Lib\\site-packages\\plotly\\__init__.py', './plotly/')],
+             # format: (path of your file, folder that file will go in)
+             # leave qt.conf the way it is
+             datas=[('qt.conf', '.'),('<path to your db>', './<your db name./')]
              hiddenimports=['pkg_resources.py2_warn'],
              hookspath=[],
              runtime_hooks=[],
@@ -24,7 +24,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='ESCAP',
+          name='ROI Tool',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -37,4 +37,4 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='escap_files')
+               name='ROI_files')
