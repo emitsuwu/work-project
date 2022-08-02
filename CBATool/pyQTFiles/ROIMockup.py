@@ -15,6 +15,7 @@ from PyQt5.QtCore import *
 from CBA_data_maker import *
 from pdf_report import *
 import pandas as pd
+import numpy as np
 import re
 
 class ExtendedComboBox(QComboBox):
@@ -344,11 +345,17 @@ class Ui_Form(object):
         '''
         self.partComboBox.setCurrentText("{default}")
         self.priceLabel.setText("Part Cost: ")
-        self.ordersSpinBox.setValue(1)
-        self.yearsSpinBox.setValue(1)
-        self.learnRateSpinBox.setValue(1)
-        self.sparesSpinBox.setValue(0)
-        self.percentDecSpinBox.setValue(0)
+        # self.ordersSpinBox.setValue(1)
+        # self.yearsSpinBox.setValue(1)
+        # self.learnRateSpinBox.setValue(1)
+        # self.sparesSpinBox.setValue(0)
+        # self.percentDecSpinBox.setValue(0)
+
+        self.ordersSpinBox.setValue(10)
+        self.yearsSpinBox.setValue(5)
+        self.learnRateSpinBox.setValue(6)
+        self.sparesSpinBox.setValue(2)
+        self.percentDecSpinBox.setValue(3)
         self.tableView.setModel(None)
 
     def runClicked(self, Form):
@@ -360,12 +367,11 @@ class Ui_Form(object):
 
         current_part_name = self.partComboBox.currentText()
         year_range = self.yearsSpinBox.value()
-        # print(year_range)
         orders_value = self.ordersSpinBox.value()
         spare_value = self.sparesSpinBox.value()
-        percentDecValue = self.percentDecSpinBox.value()
-        learnRateValue = self.learnRateSpinBox.value()
-        totalParts = spare_value + orders_value
+        pD_value = self.percentDecSpinBox.value()
+        lr_value = self.learnRateSpinBox.value()
+        totalOrders = spare_value + orders_value
 
         current_part_data = get_cba_part_data(current_part_name)
         current_part_cost = current_part_data['part_cost'][0]
@@ -374,74 +380,79 @@ class Ui_Form(object):
         the formulas below are what's used to calculate
         values to be placed in each tablemodel cell
         '''
-        baseline = current_part_cost * totalParts
-        trueLearnRate = baseline * (1 - learnRateValue)
-        truePercentDecrease = trueLearnRate * (1 - percentDecValue)
 
+        baseline = [current_part_cost * totalOrders] * year_range
+        truePercentDecrease = [0] * year_range
+        for x in range(year_range):
+            if (x >= 1):
+                # baseline[x] = baseline[x-1] * (1 - (.01 * lr_value))
+                baseline[x] = f"${float(baseline[x-1][1::]) * (1 - (.01 * float(lr_value))):.2f}"
+                truePercentDecrease[x] = f'${float(baseline[x][1::]) * (1 - (.01 * float(pD_value))):.2f}'
+            else:
+                baseline[x] = f"${current_part_cost * totalOrders:.2f}"
+                truePercentDecrease[x] = f'${float(current_part_cost * totalOrders) * (1 - (.01 * float(pD_value))):.2f}'
 
+        print(baseline)
+        print(truePercentDecrease)
         '''
         formula to calculate backended even
         spread of parts between years
         '''
-        if totalParts >= year_range:
-            temp = totalParts % year_range
-            temp_2 = totalParts - temp
-            temp_3 = temp_2 / year_range
-            row_list = [temp_3] * year_range
-            spares_list = [temp_3] * year_range
-            if temp:
-                for x in range(temp):
-                    row_list[-(x+1)] = temp_3 + 1
+        if totalOrders >= year_range:
+            step_1_o = orders_value % year_range
+            step_1_s = spare_value % year_range
+
+            temp_2_o = orders_value - step_1_o
+            temp_2_s = spare_value - step_1_s
+
+            temp_3_o = temp_2_o / year_range
+            temp_3_s = temp_2_s / year_range
+
+            row_list = [temp_3_o] * year_range
+            spares_list = [temp_3_s] * year_range
+            if step_1_o:
+                for x in range(step_1_o):
+                    row_list[-(x+1)] = temp_3_o + 1
+
+            if step_1_s:
+                for x in range(step_1_s):
+                    spares_list[-(x+1)] = temp_3_s + 1
             '''
             Apologies if this is a bit roundabout, but this sets the spares_list to be exactly the same as the row_list
             and checks to see if their index values are different, and if they are, then the spares_list value at that
             index is set to 1. If the year count is set to 1, then the spares_list value will be self.sparesSpinBox.value()
             '''
-            y = 0
-            if year_range > 1:
-                for x in range(year_range):
-                    if row_list[x] == row_list[y]:
-                        spares_list[x] = 0
-                    else:
-                        spares_list[x] = 1
-            else:
-                spares_list[y] = spare_value
-            print("BELOW THIS IS THE LIST THAT HAS ALL THE ORDERS GENERALLY OPTIMIZED")
-            print(row_list)
-            print(spares_list)
+
+            # print("BELOW THIS IS THE LIST THAT HAS ALL THE ORDERS GENERALLY OPTIMIZED")
+            # print(row_list)
+            # print(spares_list)
         else:
             print("get good")
+
+
+        years_list = [0] * year_range
+        for x in range(year_range):
+            years_list[x] = 'Year ' + str(x + 1)
 
         # print(f"current_part_cost: {current_part_cost}")
         part_cost_string = "${0:.2f}".format(current_part_cost)
         self.priceLabel.setText("Part Cost: ")
         self.priceLabel.setText(str(self.priceLabel.text() + part_cost_string))
 
-        self.tabledata = [baseline, truePercentDecrease, row_list,
-                        spares_list]
-        self.index = ['Baseline', 'Percent Decrease', '# of parts', '# of spares']
+        self.tabledata = [baseline, truePercentDecrease, row_list,spares_list]
+        self.index = ['Baseline', 'Percent Decrease', 'No. of Orders',
+         'No. of Spares']
         self.df = pd.DataFrame(self.tabledata)
 
         '''
         SO FAR THIS SECTION IS GOOD FOR:
             ADDING YEARS BASED ON "No. of Years" SPINBOX
         THIS SECTION NEEDS TO ADD IMPLEMENTATION OF:
-            ORDERS SPINGBOX
+            ORDERS SPINBOX
             PERCENT DECREASE SPINBOX
             LEARN RATE SPINBOX
         '''
-
-
-        # self.df.columns = ['Yea 1', 'Yea 2', 'Yea 3', 'Yea 4']
-        # # self.df.columns = ['Year 1']
-        i = 1
-        while(i <= self.yearsSpinBox.value()):
-            self.df.insert(i, 'Year ' + str(i), True)
-            i += 1
-
-
-
-
+        self.df.columns = years_list
         tablemodel = Model(self.df, self.df.columns, self.index, self)
         self.tableView.setModel(tablemodel)
         stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
@@ -452,7 +463,8 @@ class Ui_Form(object):
         print(self.df)
         print("\n")
         temp_list = self.df.values
-        temp_df = pd.DataFrame(temp_list, columns=['Baseline', 'Percent Decrease', '# of parts', '# of spares'])
+        print(temp_list)
+        temp_df = pd.DataFrame(temp_list, columns=['Baseline', 'Percent Decrease', 'No. of Parts', 'No. of Spares'])
         pdf_report(temp_df)
 
     def retranslateUi(self, Form):
