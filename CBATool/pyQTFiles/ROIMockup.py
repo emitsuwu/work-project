@@ -345,18 +345,11 @@ class Ui_Form(object):
         '''
         self.partComboBox.setCurrentText("{default}")
         self.priceLabel.setText("Part Cost: ")
-        # self.ordersSpinBox.setValue(1)
-        # self.yearsSpinBox.setValue(1)
-        # self.learnRateSpinBox.setValue(1)
-        # self.sparesSpinBox.setValue(0)
-        # self.percentDecSpinBox.setValue(0)
-
-        self.ordersSpinBox.setValue(10)
-        self.yearsSpinBox.setValue(5)
-        self.learnRateSpinBox.setValue(6)
-        self.sparesSpinBox.setValue(2)
-        self.percentDecSpinBox.setValue(3)
-        self.tableView.setModel(None)
+        self.ordersSpinBox.setValue(1)
+        self.yearsSpinBox.setValue(1)
+        self.learnRateSpinBox.setValue(1)
+        self.sparesSpinBox.setValue(0)
+        self.percentDecSpinBox.setValue(0)
 
     def runClicked(self, Form):
         '''
