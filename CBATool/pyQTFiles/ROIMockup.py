@@ -381,11 +381,12 @@ class Ui_Form(object):
         values to be placed in each tablemodel cell
         '''
 
+        totalBaseline = 0
+        totalPercentDecrease = 0
         baseline = [current_part_cost * totalOrders] * year_range
         truePercentDecrease = [0] * year_range
         for x in range(year_range):
             if (x >= 1):
-                # baseline[x] = baseline[x-1] * (1 - (.01 * lr_value))
                 baseline[x] = f"${float(baseline[x-1][1::]) * (1 - (.01 * float(lr_value))):.2f}"
                 truePercentDecrease[x] = f'${float(baseline[x][1::]) * (1 - (.01 * float(pD_value))):.2f}'
             else:
@@ -394,6 +395,22 @@ class Ui_Form(object):
 
         print(baseline)
         print(truePercentDecrease)
+
+        for x in range(year_range):
+            totalBaseline = totalBaseline + float(baseline[x][1::])
+            totalPercentDecrease = totalPercentDecrease + float(truePercentDecrease[x][1::])
+
+        tbtpDifference = float(totalBaseline) - float(totalPercentDecrease)
+
+        self.total_values_list = [["Total Baseline", f"${float(totalBaseline):.2f}"],
+                            ["Total Percent Decrease", f"${float(totalPercentDecrease):.2f}"],
+                            ["Total Orders", totalOrders], ["Difference", f"${float(tbtpDifference):.2f}"]]
+
+        # print(total_values_list)
+        # print(f"${float(totalBaseline):.2f}")
+        # print(f"${float(totalPercentDecrease):.2f}")
+        # print(f"${float(tbtpDifference):.2f}")
+
         '''
         formula to calculate backended even
         spread of parts between years
@@ -422,7 +439,6 @@ class Ui_Form(object):
             and checks to see if their index values are different, and if they are, then the spares_list value at that
             index is set to 1. If the year count is set to 1, then the spares_list value will be self.sparesSpinBox.value()
             '''
-
             # print("BELOW THIS IS THE LIST THAT HAS ALL THE ORDERS GENERALLY OPTIMIZED")
             # print(row_list)
             # print(spares_list)
@@ -430,29 +446,21 @@ class Ui_Form(object):
             print("get good")
 
 
-        years_list = [0] * year_range
+        self.years_list = [0] * year_range
         for x in range(year_range):
-            years_list[x] = 'Year ' + str(x + 1)
+            self.years_list[x] = 'Year ' + str(x + 1)
 
         # print(f"current_part_cost: {current_part_cost}")
         part_cost_string = "${0:.2f}".format(current_part_cost)
         self.priceLabel.setText("Part Cost: ")
         self.priceLabel.setText(str(self.priceLabel.text() + part_cost_string))
 
-        self.tabledata = [baseline, truePercentDecrease, row_list,spares_list]
+        self.tabledata = [baseline, truePercentDecrease, row_list, spares_list]
         self.index = ['Baseline', 'Percent Decrease', 'No. of Orders',
          'No. of Spares']
         self.df = pd.DataFrame(self.tabledata)
 
-        '''
-        SO FAR THIS SECTION IS GOOD FOR:
-            ADDING YEARS BASED ON "No. of Years" SPINBOX
-        THIS SECTION NEEDS TO ADD IMPLEMENTATION OF:
-            ORDERS SPINBOX
-            PERCENT DECREASE SPINBOX
-            LEARN RATE SPINBOX
-        '''
-        self.df.columns = years_list
+        self.df.columns = self.years_list
         tablemodel = Model(self.df, self.df.columns, self.index, self)
         self.tableView.setModel(tablemodel)
         stylesheet  = "QHeaderView::section{Background-color:lightgrey}"
@@ -461,11 +469,19 @@ class Ui_Form(object):
 
     def pdfClicked(self, Form):
         print(self.df)
-        print("\n")
-        temp_list = self.df.values
-        print(temp_list)
-        temp_df = pd.DataFrame(temp_list, columns=['Baseline', 'Percent Decrease', 'No. of Parts', 'No. of Spares'])
-        pdf_report(temp_df)
+        temp = self.df.values.tolist()
+        temp_df = pd.DataFrame(temp)
+        temp_df= temp_df.transpose()
+        new_list = []
+        for x in range(temp_df.shape[0]):
+            new_list.append(temp_df.loc[x, :].values.tolist())
+        new_df = pd.DataFrame(new_list)
+
+        new_df = pd.DataFrame(new_list, columns=['Baseline', 'Percent Decrease', 'No. of Orders',
+           'No. of Spares'])
+        print(new_df)
+        temp_list2 = self.total_values_list
+        pdf_report(new_df, temp_list2)
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
